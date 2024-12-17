@@ -1,0 +1,7 @@
+const PAGINATION_DIRECTION_BASE = {
+  ASC: 'ASC',
+  DESC: 'DESC',
+} as const;
+
+export type PAGINATION_DIRECTION =
+  (typeof PAGINATION_DIRECTION_BASE)[keyof typeof PAGINATION_DIRECTION_BASE];

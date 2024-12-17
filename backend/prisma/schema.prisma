@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  secureId         String            @unique
+  username         String            @unique
+  password         String?
+  mmr              Int
+  completeons      Completeon[]
+  profilePicture   String?
+  gameParticipants GameParticipant[]
+
+  @@map("users")
+}
+
+model Unit {
+  id                 Int                 @id @default(autoincrement())
+  secureId           String              @unique
+  unitOrder          Int
+  name               String
+  unitQuestionImages UnitQuestionImage[]
+  unitQuestionTexts  UnitQuestionText[]
+  completeons        Completeon[]
+
+  @@map("units")
+}
+
+model UnitQuestionImage {
+  id             Int    @id @default(autoincrement())
+  secureId       String @unique
+  unit           Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  unitId         Int
+  questionOrder  Int
+  questionImage  String
+  questionAnswer String
+
+  @@map("unitQuestionImages")
+}
+
+model UnitQuestionText {
+  id            Int    @id @default(autoincrement())
+  secureId      String @unique
+  unit          Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  unitId        Int
+  questionOrder Int
+  questionText  String
+
+  @@map("unitQuestionTexts")
+}
+
+model Completeon {
+  unitId Int
+  unit   Unit @relation(fields: [unitId], references: [id])
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@id([unitId, userId])
+  @@map("completeons")
+}
+
+model Game {
+  id               Int               @id @default(autoincrement())
+  secureId         String            @unique
+  question         String
+  expired          BigInt
+  isMmrCalculated  Boolean
+  gameParticipants GameParticipant[]
+
+  @@map("games")
+}
+
+model GameParticipant {
+  game      Game  @relation(fields: [gameId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  gameId    Int
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    Int
+  successes Int[]
+  skips     Int[]
+
+  @@id([gameId, userId])
+  @@map("gameParticipants")
+}
