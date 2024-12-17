@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.abs-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.overflow-y-scroll::-webkit-scrollbar {
+  display: none;
+}
